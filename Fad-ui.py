@@ -5,7 +5,7 @@ import numpy as np
 import gender_guesser.detector as gender
 
 # Load the saved model
-model = joblib.load('nn_model.pkl')
+model = joblib.load('fake_account_model_RF95.pkl')
 
 # Initialize gender detector
 sex_predictor = gender.Detector(case_sensitive=False)
