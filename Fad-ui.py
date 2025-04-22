@@ -6,10 +6,10 @@ import gender_guesser.detector as gender
 
 # ---------- CONFIG -----------------------------------------------------------
 MODEL_FILES = {
-    "Random Forest": "fake_account_model_RF99.pkl",
-    "SVM":           "svm_model.pkl",
-    "XGBoost":       "xgb_model.pkl",
-    "ANN (MLP)":     "nn_model.pkl"
+    "Random Forest": "fake_account_model_RF.pkl",
+    "SVM":           "fake_account_model_SVM.pkl",
+    "XGBoost":       "fake_account_model_XGB.pkl",
+    "ANN (MLP)":     "fake_account_model_ANN.pkl"
 }
 
 @st.cache_resource(show_spinner=False)
@@ -33,7 +33,7 @@ def predict_sex(name: str) -> int:
 
 # ---------- UI ---------------------------------------------------------------
 st.title("🕵️‍♂️ Fake Account Detector")
-st.image("fakenot.png")
+
 st.sidebar.header("🔧 Settings")
 model_choice = st.sidebar.selectbox("Choose model", list(MODEL_FILES.keys()),
                                     index=0)
@@ -51,7 +51,25 @@ friends_count     = st.number_input("Friends Count",   min_value=0, value=300)
 favourites_count  = st.number_input("Favourites Count",min_value=0, value=90)
 listed_count      = st.number_input("Listed Count",    min_value=0, value=2)
 
-if st.button("Predict"):
+# Add extra features only for Random Forest model
+if model_choice == "Random Forest":
+    verified = st.checkbox("Is Verified", value=False)  # New input
+    default_profile_image = st.checkbox("Has Default Profile Image", value=False)  # New input
+
+    # Update the feature set to include the extra features
+    features = pd.DataFrame([[
+        statuses_count, followers_count, friends_count,
+        favourites_count, listed_count,
+        predict_sex(name),
+        lang_dict.get(lang, -1),
+        verified,  # Only for Random Forest
+        default_profile_image  # Only for Random Forest
+    ]], columns=[
+        'statuses_count', 'followers_count', 'friends_count',
+        'favourites_count', 'listed_count', 'sex_code', 'lang_code',
+        'verified', 'default_profile_image'
+    ])
+else:
     features = pd.DataFrame([[
         statuses_count, followers_count, friends_count,
         favourites_count, listed_count,
@@ -62,6 +80,8 @@ if st.button("Predict"):
         'favourites_count', 'listed_count', 'sex_code', 'lang_code'
     ])
 
+# Prediction button
+if st.button("Predict"):
     pred = int(model.predict(features)[0])
     label = "🟢 Genuine" if pred == 1 else "🔴 Fake"
 
