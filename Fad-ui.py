@@ -56,3 +56,34 @@ if st.button("Predict"):
     st.subheader("🔍 Prediction:")
     st.markdown(f"**This account is likely: {label}**")
 
+
+
+custom_css = """
+<style>
+/* Banner area */
+.app-banner {
+    background-image: url('https://raw.githubusercontent.com/<user>/<repo>/main/assets/banner.png');
+    background-size: cover;
+    height: 160px;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+}
+
+/* Card‑like containers */
+.stContainer, .stTextInput, .stNumberInput, .stSelectbox {
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05) !important;
+}
+
+/* Make primary button a little thicker */
+div.stButton > button:first-child {
+    padding: 0.6rem 2rem;
+    font-weight: 600;
+}
+</style>
+"""
+st.markdown(custom_css, unsafe_allow_html=True)
+
+# Optional banner render
+st.markdown('<div class="app-banner"></div>', unsafe_allow_html=True)
