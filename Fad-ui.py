@@ -54,4 +54,4 @@ if st.button("Predict"):
     label = "🟢 Genuine" if prediction == 1 else "🔴 Fake"
 
     st.subheader("🔍 Prediction:")
-    st.markdown(f"**This account is likely
+    st.markdown(f"**This account is likely: {label}**")
