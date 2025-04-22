@@ -6,10 +6,10 @@ import gender_guesser.detector as gender
 
 # ---------- CONFIG -----------------------------------------------------------
 MODEL_FILES = {
-    "Random Forest": "fake_account_model_RF95.pkl",
-    "SVM":           "fake_account_model_SVM.pkl",
-    "XGBoost":       "fake_account_model_XGB.pkl",
-    "ANN (MLP)":     "fake_account_model_ANN.pkl"
+    "Random Forest": "fake_account_model_RF99.pkl",
+    "SVM":           "svm_model.pkl",
+    "XGBoost":       "xgb_model.pkl",
+    "ANN (MLP)":     "nn_model.pkl"
 }
 
 @st.cache_resource(show_spinner=False)
@@ -33,7 +33,7 @@ def predict_sex(name: str) -> int:
 
 # ---------- UI ---------------------------------------------------------------
 st.title("🕵️‍♂️ Fake Account Detector")
-
+st.image("fakenot.png")
 st.sidebar.header("🔧 Settings")
 model_choice = st.sidebar.selectbox("Choose model", list(MODEL_FILES.keys()),
                                     index=0)
