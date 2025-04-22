@@ -1,2 +1,5 @@
 joblib
 gender_guesser
+pandas
+numpy
+scikit-learn
