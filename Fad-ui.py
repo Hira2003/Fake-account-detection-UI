@@ -25,6 +25,7 @@ def predict_sex(name):
     return sex_map.get(gender_label, 0)
 
 st.title("🕵️‍♂️ Fake Account Detector")
+st.image("fakenot.png")
 st.write("Enter user profile details below to predict whether the account is **Fake or Genuine**.")
 
 # User Inputs
