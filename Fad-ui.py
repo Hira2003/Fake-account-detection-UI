@@ -10,7 +10,7 @@ def load_model(model_key):
     return joblib.load(MODEL_FILES[model_key])
 
 MODEL_FILES = {
-    "Random Forest": "fake_account_model_RF99.pkl",
+    "Random Forest": "fake_account_model_new99.pkl",
     "SVM": "svm_model.pkl",
     "XGBoost": "xgb_model.pkl",
     "ANN (MLP)": "nn_model.pkl"
