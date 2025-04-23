@@ -11,9 +11,9 @@ def load_model(model_key):
 
 MODEL_FILES = {
     "Random Forest": "fake_account_model_RF99.pkl",
-    "SVM":           "svm_model.pkl",
-    "XGBoost":       "xgb_model.pkl",
-    "ANN (MLP)":     "nn_model.pkl"
+    "SVM": "svm_model.pkl",
+    "XGBoost": "xgb_model.pkl",
+    "ANN (MLP)": "nn_model.pkl"
 }
 
 # ---- Gender Detector ----
@@ -81,8 +81,33 @@ if uploaded_file:
                 verified = bool(selected.get("verified", False))
             if "default_profile_image" in selected:
                 default_profile_image = bool(selected.get("default_profile_image", False))
+            
+            # Auto-fill the form
+            st.session_state.name = name
+            st.session_state.lang = lang
+            st.session_state.statuses_count = statuses_count
+            st.session_state.followers_count = followers_count
+            st.session_state.friends_count = friends_count
+            st.session_state.favourites_count = favourites_count
+            st.session_state.listed_count = listed_count
+            st.session_state.verified = verified
+            st.session_state.default_profile_image = default_profile_image
+
     except Exception as e:
         st.error(f"Error loading file: {e}")
+
+# ---- Auto-filled Inputs ----
+if 'name' in st.session_state:
+    name = st.text_input("Full Name", st.session_state.name)
+    lang = st.selectbox("Language Code", list(lang_dict.keys()), index=lang_dict.get(st.session_state.lang, 0))
+    statuses_count = st.number_input("Statuses Count", min_value=0, value=st.session_state.statuses_count)
+    followers_count = st.number_input("Followers Count", min_value=0, value=st.session_state.followers_count)
+    friends_count = st.number_input("Friends Count", min_value=0, value=st.session_state.friends_count)
+    favourites_count = st.number_input("Favourites Count", min_value=0, value=st.session_state.favourites_count)
+    listed_count = st.number_input("Listed Count", min_value=0, value=st.session_state.listed_count)
+
+    verified = st.session_state.verified
+    default_profile_image = st.session_state.default_profile_image
 
 # ---- Prediction ----
 if st.button("Predict"):
