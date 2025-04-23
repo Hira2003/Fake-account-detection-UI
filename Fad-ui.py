@@ -16,13 +16,6 @@ MODEL_FILES = {
     "ANN (MLP)":     "nn_model.pkl"
 }
 
-# ---- Load Dataset ----
-@st.cache_data
-def load_user_dataset():
-    return pd.read_csv("users.csv")
-
-user_df = load_user_dataset()
-
 # ---- Gender Detector ----
 sex_predictor = gender.Detector(case_sensitive=False)
 sex_map = {'female': -2, 'mostly_female': -1, 'unknown': 0, 'mostly_male': 1, 'male': 2}
@@ -42,13 +35,15 @@ lang_dict = {
 st.set_page_config(page_title="Fake Account Detector", layout="centered")
 st.title("🕵️‍♀️ Fake Account Detector")
 st.image("fakenot.png")
-st.markdown("Enter user details manually, or choose a user from the dataset to predict if it's **Fake or Genuine**.")
+st.markdown("Enter user details manually, or upload a dataset and pick a row to predict if it's **Fake or Genuine**.")
 
 # ---- Model Selection ----
 selected_model = st.selectbox("Select Model", list(MODEL_FILES.keys()))
 model = load_model(selected_model)
 
 # ---- User Inputs ----
+st.subheader("✍️ Manual Entry")
+
 name = st.text_input("Full Name", "Alice Johnson")
 lang = st.selectbox("Language Code", list(lang_dict.keys()))
 statuses_count = st.number_input("Statuses Count", min_value=0, value=120)
@@ -57,29 +52,37 @@ friends_count = st.number_input("Friends Count", min_value=0, value=300)
 favourites_count = st.number_input("Favourites Count", min_value=0, value=90)
 listed_count = st.number_input("Listed Count", min_value=0, value=2)
 
-# Extra fields (only for Random Forest)
 verified = False
 default_profile_image = False
 
-# ---- Load From Dataset Option ----
+# ---- Upload & Load Dataset ----
 st.markdown("---")
-st.subheader("📂 Or choose a user from dataset")
+st.subheader("📂 Load Dataset for Prediction")
 
-row_index = st.number_input("Select Row (Index)", min_value=0, max_value=len(user_df)-1, value=0)
+uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
-if st.button("Load User From Dataset"):
-    selected = user_df.iloc[row_index]
-    name = selected.get("name", name)
-    lang = selected.get("lang", lang)
-    statuses_count = int(selected.get("statuses_count", statuses_count))
-    followers_count = int(selected.get("followers_count", followers_count))
-    friends_count = int(selected.get("friends_count", friends_count))
-    favourites_count = int(selected.get("favourites_count", favourites_count))
-    listed_count = int(selected.get("listed_count", listed_count))
-    if "verified" in selected:
-        verified = bool(selected.get("verified", False))
-    if "default_profile_image" in selected:
-        default_profile_image = bool(selected.get("default_profile_image", False))
+if uploaded_file:
+    try:
+        user_df = pd.read_csv(uploaded_file)
+        st.success(f"Loaded dataset with {len(user_df)} rows.")
+        
+        row_index = st.number_input("Select Row (Index)", min_value=0, max_value=len(user_df)-1, value=0)
+
+        if st.button("Load User From Dataset"):
+            selected = user_df.iloc[row_index]
+            name = selected.get("name", name)
+            lang = selected.get("lang", lang)
+            statuses_count = int(selected.get("statuses_count", statuses_count))
+            followers_count = int(selected.get("followers_count", followers_count))
+            friends_count = int(selected.get("friends_count", friends_count))
+            favourites_count = int(selected.get("favourites_count", favourites_count))
+            listed_count = int(selected.get("listed_count", listed_count))
+            if "verified" in selected:
+                verified = bool(selected.get("verified", False))
+            if "default_profile_image" in selected:
+                default_profile_image = bool(selected.get("default_profile_image", False))
+    except Exception as e:
+        st.error(f"Error loading file: {e}")
 
 # ---- Prediction ----
 if st.button("Predict"):
