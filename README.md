@@ -37,14 +37,15 @@ Each model was trained on profile-based features like:
    ```bash
    git clone https://github.com/yourusername/fake-account-detector.git
    cd fake-account-detector
-pip install -r requirements.txt
-streamlit run Fad-ui.py
-.
-├── Fad-ui.py                 # Main Streamlit app
-├── models/                   # Contains saved .pkl model files
-├── assets/                   # Background illustrations & UI images
-├── requirements.txt          # Python dependencies
-└── README.md                 # This file
+   pip install -r requirements.txt
+   streamlit run Fad-ui.py
+   .
+   ├── Fad-ui.py                 # Main Streamlit app
+   ├── models/                   # Contains saved .pkl model files
+   ├── assets/                   # Background illustrations & UI images
+   ├── requirements.txt          # Python dependencies
+   └── README.md                 # This file
+
 🐱‍💻 Author
 
 Hira Fuyu
