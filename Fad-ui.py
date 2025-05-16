@@ -18,7 +18,7 @@ with col1:
 
         # Accuracies before and after Negative Selection
         before = [91.00, 93.20, 95.20, 92.10]
-        after = [91.84, 95.27, 99.00, 97.75]
+        after = [91.84, 95.27, 99.40, 97.75]
 
         x = range(len(models))  # [0, 1, 2, 3]
 
