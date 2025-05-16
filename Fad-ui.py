@@ -3,6 +3,46 @@ import pandas as pd
 import joblib
 import numpy as np
 import gender_guesser.detector as gender
+import matplotlib.pyplot as plt
+
+# ---- Accuracy Comparison Buttons ----
+st.markdown("---")
+st.subheader("📊 Model Accuracy Comparison")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    if st.button("📈 Show Accuracy Figure"):
+        # Model names
+        models = ['SVM', 'ANN', 'Random Forest', 'XGBoost']
+
+        # Accuracies before and after Negative Selection
+        before = [91.00, 93.20, 95.20, 92.10]
+        after = [91.84, 95.27, 99.00, 97.75]
+
+        x = range(len(models))  # [0, 1, 2, 3]
+
+        # Plot
+        fig, ax = plt.subplots(figsize=(10, 6))
+        bar_width = 0.35
+
+        ax.bar(x, before, width=bar_width, label='Before Negative Selection', color='lightcoral')
+        ax.bar([i + bar_width for i in x], after, width=bar_width, label='After Negative Selection', color='mediumseagreen')
+
+        ax.set_xlabel('Models')
+        ax.set_ylabel('Accuracy (%)')
+        ax.set_title('Model Accuracy Before and After Negative Selection')
+        ax.set_xticks([i + bar_width / 2 for i in x])
+        ax.set_xticklabels(models)
+        ax.set_ylim(85, 100)
+        ax.legend()
+        ax.grid(axis='y', linestyle='--', alpha=0.7)
+
+        st.pyplot(fig)
+
+with col2:
+    if st.button("🧮 Show Accuracy Results"):
+        st.info("📌 You will provide this logic later. Placeholder for accuracy results.")
 
 # ---- Load Models ----
 @st.cache_resource
