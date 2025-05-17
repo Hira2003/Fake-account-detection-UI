@@ -139,8 +139,7 @@ if st.button("Predict"):
     
     st.subheader("🔍 Prediction Result:")
     st.markdown(f"**This account is likely: {label}**")
-# ---- Accuracy Visualization Buttons ----
-st.markdown("---")
+
 st.subheader("📊 Model Accuracy Comparison")
 
 # Button to show plot
