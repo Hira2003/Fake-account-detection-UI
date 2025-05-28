@@ -5,28 +5,24 @@ import numpy as np
 import gender_guesser.detector as gender
 import matplotlib.pyplot as plt
 
-# ---- Load Twitter Models ----
+# ---- Load Models ----
 @st.cache_resource
 def load_model(model_key):
     return joblib.load(MODEL_FILES[model_key])
 
+# Separate model files for Twitter and Instagram
 MODEL_FILES = {
+    # Twitter Models
     "Random Forest": "fake_account_model_new99.pkl",
     "SVM": "svm_model.pkl",
     "XGBoost": "xgb_model.pkl",
-    "ANN (MLP)": "nn_model.pkl"
-}
-
-# ---- Load Instagram Models ----
-@st.cache_resource
-def load_insta_model(model_key):
-    return joblib.load(INSTA_MODEL_FILES[model_key])
-
-INSTA_MODEL_FILES = {
-    "Random Forest": "fake_account_model_new_insta.pkl",
-    "SVM": "svm_model_insta.pkl",
-    "XGBoost": "xgb_model-clone99_insta.pkl",
-    "ANN (MLP)": "fake_account_nn_model_insta.pkl"
+    "ANN (MLP)": "nn_model.pkl",
+    
+    # Instagram Models
+    "IG Random Forest": "fake_account_model_new_insta.pkl",
+    "IG SVM":  "svm_model_insta.pkl",
+    "IG XGBoost": "xgb_model-clone99_insta.pkl",
+    "IG ANN (MLP)": "fake_account_nn_model_insta.pkl"
 }
 
 # ---- Gender Detector ----
@@ -51,7 +47,7 @@ page = st.sidebar.radio("Select Page", ["Twitter Account Detection", "Instagram 
 if page == "Twitter Account Detection":
     st.title("🐦 Twitter Fake Account Detector")
 
-    selected_model = st.selectbox("Select Model", list(MODEL_FILES.keys()))
+    selected_model = st.selectbox("Select Model", ["Random Forest", "SVM", "XGBoost", "ANN (MLP)"])
     model = load_model(selected_model)
 
     st.subheader("✍️ Manual Entry")
@@ -63,8 +59,6 @@ if page == "Twitter Account Detection":
     friends_count = st.number_input("Friends Count", min_value=0, value=300)
     favourites_count = st.number_input("Favourites Count", min_value=0, value=90)
     listed_count = st.number_input("Listed Count", min_value=0, value=2)
-    verified = st.checkbox("Verified", False)
-    default_profile_image = st.checkbox("Default Profile Image", False)
 
     st.subheader("📂 Load Dataset")
     uploaded_file = st.file_uploader("Upload Twitter CSV", type=["csv"])
@@ -83,8 +77,6 @@ if page == "Twitter Account Detection":
             friends_count = int(selected.get("friends_count", friends_count))
             favourites_count = int(selected.get("favourites_count", favourites_count))
             listed_count = int(selected.get("listed_count", listed_count))
-            verified = bool(selected.get("verified", verified))
-            default_profile_image = bool(selected.get("default_profile_image", default_profile_image))
 
     if st.button("Predict Twitter Account"):
         sex_code = predict_sex(name)
@@ -92,12 +84,10 @@ if page == "Twitter Account Detection":
 
         features = pd.DataFrame([[
             statuses_count, followers_count, friends_count,
-            favourites_count, listed_count, sex_code, lang_code,
-            int(verified), int(default_profile_image)
+            favourites_count, listed_count, sex_code, lang_code
         ]], columns=[
             'statuses_count', 'followers_count', 'friends_count',
-            'favourites_count', 'listed_count', 'sex_code', 'lang_code',
-            'verified', 'default_profile_image'])
+            'favourites_count', 'listed_count', 'sex_code', 'lang_code'])
 
         prediction = model.predict(features)[0]
         label = "🟢 Genuine" if prediction == 1 else "🔴 Fake"
@@ -107,10 +97,12 @@ if page == "Twitter Account Detection":
 elif page == "Instagram Account Detection":
     st.title("📸 Instagram Fake Account Detector")
 
-    selected_insta_model = st.selectbox("Select Instagram Model", list(INSTA_MODEL_FILES.keys()))
-    insta_model = load_insta_model(selected_insta_model)
-
     st.markdown("Fill in the fields below or load from dataset")
+
+    selected_ig_model = st.selectbox("Select Instagram Model", [
+        "IG Random Forest", "IG SVM", "IG XGBoost", "IG ANN (MLP)"
+    ])
+    insta_model = load_model(selected_ig_model)
 
     num_followers = st.number_input("Followers", min_value=0, value=1000)
     num_following = st.number_input("Following", min_value=0, value=500)
