@@ -174,7 +174,7 @@ def run():
         st.dataframe(pd.read_csv("fusers.csv").head())
         st.dataframe(pd.read_csv("users.csv").head())
         st.markdown("Instagram Sample:")
-        st.dataframe(pd.read_csv("instagram_sample.csv").head())
+        st.dataframe(pd.read_csv("social_media_merged_numeric.csv").head())
 
     if st.button("Show Figures"):
         st.title("Twitter Accuracies Before and After Negative and Clonal Selection")
