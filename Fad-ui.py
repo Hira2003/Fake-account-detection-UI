@@ -171,11 +171,13 @@ def run():
     st.header("📖 About the Study")
     if st.button("Show Datasets"):
         st.markdown("Twitter Sample:")
-        st.dataframe(pd.read_csv("twitter_sample.csv").head())
+        st.dataframe(pd.read_csv("fusers.csv").head())
+        st.dataframe(pd.read_csv("users.csv").head())
         st.markdown("Instagram Sample:")
         st.dataframe(pd.read_csv("instagram_sample.csv").head())
 
     if st.button("Show Figures"):
+        st.title("Twitter Accuracies Before and After Negative and Clonal Selection")
         models = ['SVM', 'ANN', 'RF', 'XGB']
         before = [91, 93.2, 95.2, 92.1]
         after = [91.8, 95.3, 99, 97.8]
@@ -188,6 +190,21 @@ def run():
         ax.set_ylabel("Accuracy %")
         ax.legend()
         st.pyplot(fig)
+
+        st.title("Instagram Accuracies Before and After Negative and Clonal Selection")
+        models = ['SVM', 'ANN', 'RF', 'XGB']
+        before = [89.60, 91.08, 93.06, 94.05]
+        after = [91.09, 95.05, 96.53, 99.01]
+        x = range(len(models))
+        fig, ax = plt.subplots()
+        ax.bar(x, before, width=0.4, label='Before', align='center')
+        ax.bar([i + 0.4 for i in x], after, width=0.4, label='After', align='center')
+        ax.set_xticks([i + 0.2 for i in x])
+        ax.set_xticklabels(models)
+        ax.set_ylabel("Accuracy %")
+        ax.legend()
+        st.pyplot(fig)
+
 
     if st.button("Show Results"):
         st.info("Random Forest (Twitter): 99% accuracy\nSVM (Insta): 91.8%\nConfusion Matrices available upon request")
