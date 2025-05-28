@@ -5,7 +5,7 @@ import numpy as np
 import gender_guesser.detector as gender
 import matplotlib.pyplot as plt
 
-# ---- Load Models ----
+# ---- Load Twitter Models ----
 @st.cache_resource
 def load_model(model_key):
     return joblib.load(MODEL_FILES[model_key])
@@ -15,6 +15,18 @@ MODEL_FILES = {
     "SVM": "svm_model.pkl",
     "XGBoost": "xgb_model.pkl",
     "ANN (MLP)": "nn_model.pkl"
+}
+
+# ---- Load Instagram Models ----
+@st.cache_resource
+def load_insta_model(model_key):
+    return joblib.load(INSTA_MODEL_FILES[model_key])
+
+INSTA_MODEL_FILES = {
+    "Random Forest": "insta_rf_model.pkl",
+    "SVM": "insta_svm_model.pkl",
+    "XGBoost": "insta_xgb_model.pkl",
+    "ANN (MLP)": "insta_nn_model.pkl"
 }
 
 # ---- Gender Detector ----
@@ -95,6 +107,9 @@ if page == "Twitter Account Detection":
 elif page == "Instagram Account Detection":
     st.title("📸 Instagram Fake Account Detector")
 
+    selected_insta_model = st.selectbox("Select Instagram Model", list(INSTA_MODEL_FILES.keys()))
+    insta_model = load_insta_model(selected_insta_model)
+
     st.markdown("Fill in the fields below or load from dataset")
 
     num_followers = st.number_input("Followers", min_value=0, value=1000)
@@ -132,9 +147,6 @@ elif page == "Instagram Account Detection":
             ratio_numlen_fullname = row.get("ratio_numlen_fullname", ratio_numlen_fullname)
 
     if st.button("Predict Instagram Account"):
-        # Placeholder: Replace with actual Instagram model
-        insta_model = load_model("Random Forest")
-
         features = pd.DataFrame([[
             num_followers, num_following, num_posts, int(extern_url), len_desc,
             int(profile_pic), int(Private), sim_name_username, len_fullname,
