@@ -185,8 +185,8 @@ elif page == "About the Study":
     st.pyplot(fig1)
 
     # --- Twitter vs Instagram Accuracy per Model ---
-    twitter = [90.5, 94.1, 97.3, 95.8]
-    instagram = [91.2, 96.4, 98.6, 97.5]
+    twitter = [89.60, 91.08, 93.06, 94.05]
+    instagram = [91.09, 95.05, 96.53, 99.01]
 
     fig2, ax2 = plt.subplots(figsize=(10, 6))
     ax2.bar(x, twitter, width=bar_width, label='Twitter', color='skyblue')
