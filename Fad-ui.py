@@ -154,35 +154,55 @@ elif page == "Instagram Account Detection":
 
 # ---- About the Study Page ----
 elif page == "About the Study":
-    st.title("📖 About the Study")
+   st.title("📖 About the Study")
 
-    if st.button("Show Datasets"):
+   if st.button("Show Datasets"):
         st.info("Datasets used in this study include Twitter profile metadata and Instagram public features extracted for classification.")
 
-    if st.button("Show Figures"):
-        models = ['SVM', 'ANN', 'Random Forest', 'XGBoost']
-        before = [91.00, 93.20, 95.20, 92.10]
-        after = [91.84, 95.27, 99.00, 97.75]
+   if st.button("Show Figures"):
+    import matplotlib.pyplot as plt
 
-        x = range(len(models))
-        bar_width = 0.35
+    # --- Overall Accuracy Before vs After Optimization ---
+    models = ['SVM', 'ANN', 'Random Forest', 'XGBoost']
+    before = [91.00, 93.20, 95.20, 92.10]
+    after = [91.84, 95.27, 99.00, 97.75]
 
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.bar(x, before, width=bar_width, label='Before Optimization', color='salmon')
-        ax.bar([i + bar_width for i in x], after, width=bar_width, label='After Optimization', color='seagreen')
+    x = range(len(models))
+    bar_width = 0.35
 
-        ax.set_xlabel('Models')
-        ax.set_ylabel('Accuracy (%)')
-        ax.set_title('Model Accuracy Comparison')
-        ax.set_xticks([i + bar_width / 2 for i in x])
-        ax.set_xticklabels(models)
-        ax.set_ylim(85, 100)
-        ax.legend()
-        ax.grid(axis='y', linestyle='--', alpha=0.7)
+    fig1, ax1 = plt.subplots(figsize=(10, 6))
+    ax1.bar(x, before, width=bar_width, label='Before Optimization', color='salmon')
+    ax1.bar([i + bar_width for i in x], after, width=bar_width, label='After Optimization', color='seagreen')
+    ax1.set_xlabel('Models')
+    ax1.set_ylabel('Accuracy (%)')
+    ax1.set_title('Model Accuracy Comparison (Before vs After Optimization)')
+    ax1.set_xticks([i + bar_width / 2 for i in x])
+    ax1.set_xticklabels(models)
+    ax1.set_ylim(85, 100)
+    ax1.legend()
+    ax1.grid(axis='y', linestyle='--', alpha=0.7)
 
-        st.pyplot(fig)
+    st.pyplot(fig1)
 
-    if st.button("Show Results"):
+    # --- Twitter vs Instagram Accuracy per Model ---
+    twitter = [90.5, 94.1, 97.3, 95.8]
+    instagram = [91.2, 96.4, 98.6, 97.5]
+
+    fig2, ax2 = plt.subplots(figsize=(10, 6))
+    ax2.bar(x, twitter, width=bar_width, label='Twitter', color='skyblue')
+    ax2.bar([i + bar_width for i in x], instagram, width=bar_width, label='Instagram', color='violet')
+    ax2.set_xlabel('Models')
+    ax2.set_ylabel('Accuracy (%)')
+    ax2.set_title('Accuracy by Platform (Twitter vs Instagram)')
+    ax2.set_xticks([i + bar_width / 2 for i in x])
+    ax2.set_xticklabels(models)
+    ax2.set_ylim(85, 100)
+    ax2.legend()
+    ax2.grid(axis='y', linestyle='--', alpha=0.7)
+
+    st.pyplot(fig2)
+
+   if st.button("Show Results"):
         st.info("Accuracy:")
         st.markdown("- Random Forest: **99.00%**\n- ANN: **95.27%**\n- XGBoost: **97.75%**\n- SVM: **91.84%**")
         st.info("Confusion matrices and classification reports are available in the full report.")
