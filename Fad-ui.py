@@ -208,3 +208,4 @@ def run():
 
     if st.button("Show Results"):
         st.info("Random Forest (Twitter): 99% accuracy\nSVM (Insta): 91.8%\nConfusion Matrices available upon request")
+
