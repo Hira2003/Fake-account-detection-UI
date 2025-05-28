@@ -41,8 +41,12 @@ lang_dict = {
 }
 
 # ---- Sidebar Navigation ----
-page = st.sidebar.radio("Select Page", ["Twitter Account Detection", "Instagram Account Detection", "About the Study"])
+page = st.sidebar.radio("Select Page", ["Main","Twitter Account Detection", "Instagram Account Detection", "About the Study"])
 
+if page == "Main":
+    st.title("Fake Account Detector")
+    st.image("fakenot.png")
+    st.text("Made by: Bouziza Hadjer and Abbassi Khawla")
 # ---- Twitter Detection Page ----
 if page == "Twitter Account Detection":
     st.title("🐦 Twitter Fake Account Detector")
