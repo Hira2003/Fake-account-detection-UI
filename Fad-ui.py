@@ -23,10 +23,10 @@ def load_insta_model(model_key):
     return joblib.load(INSTA_MODEL_FILES[model_key])
 
 INSTA_MODEL_FILES = {
-    "Random Forest": "insta_rf_model.pkl",
-    "SVM": "insta_svm_model.pkl",
-    "XGBoost": "insta_xgb_model.pkl",
-    "ANN (MLP)": "insta_nn_model.pkl"
+    "Random Forest": "fake_account_model_new_insta.pkl",
+    "SVM": "svm_model_insta.pkl",
+    "XGBoost": "xgb_model-clone99_insta.pkl",
+    "ANN (MLP)": "fake_account_nn_model_insta.pkl"
 }
 
 # ---- Gender Detector ----
