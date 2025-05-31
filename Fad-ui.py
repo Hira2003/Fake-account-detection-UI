@@ -44,7 +44,7 @@ lang_dict = {
 page = st.sidebar.radio("Select Page", ["Main","Twitter Account Detection", "Instagram Account Detection", "About the Study"])
 
 if page == "Main":
-    st.title("Fake Account Detector")
+    st.title("Fake Account Detector 🕵🏻‍♀️")
     st.image("fakenot.png")
     st.text("Made by: Bouziza Hadjer and Abbassi Khawla")
 # ---- Twitter Detection Page ----
@@ -179,7 +179,7 @@ elif page == "About the Study":
     ax1.bar([i + bar_width for i in x], after, width=bar_width, label='After Optimization', color='seagreen')
     ax1.set_xlabel('Models')
     ax1.set_ylabel('Accuracy (%)')
-    ax1.set_title('Model Accuracy Comparison (Before vs After Optimization)')
+    ax1.set_title('Accuracy before and after negative and clonal selection dataset1')
     ax1.set_xticks([i + bar_width / 2 for i in x])
     ax1.set_xticklabels(models)
     ax1.set_ylim(85, 100)
@@ -189,15 +189,17 @@ elif page == "About the Study":
     st.pyplot(fig1)
 
     # --- Twitter vs Instagram Accuracy per Model ---
-    twitter = [89.60, 91.08, 93.06, 94.05]
-    instagram = [91.09, 95.05, 96.53, 99.01]
+    models = ['SVM', 'ANN', 'Random Forest', 'XGBoost']
+    
+    before = [89.60, 91.08, 93.06, 94.05]
+    after = [91.09, 95.05, 96.53, 99.01]
 
     fig2, ax2 = plt.subplots(figsize=(10, 6))
-    ax2.bar(x, twitter, width=bar_width, label='Twitter', color='skyblue')
-    ax2.bar([i + bar_width for i in x], instagram, width=bar_width, label='Instagram', color='violet')
+    ax2.bar(x, before, width=bar_width, label='before', color='skyblue')
+    ax2.bar([i + bar_width for i in x], after, width=bar_width, label='after', color='violet')
     ax2.set_xlabel('Models')
     ax2.set_ylabel('Accuracy (%)')
-    ax2.set_title('Accuracy by Platform (Twitter vs Instagram)')
+    ax2.set_title('Accuracy before and after negative and clonal selection dataset2')
     ax2.set_xticks([i + bar_width / 2 for i in x])
     ax2.set_xticklabels(models)
     ax2.set_ylim(85, 100)
@@ -207,6 +209,17 @@ elif page == "About the Study":
     st.pyplot(fig2)
 
    if st.button("Show Results"):
-        st.info("Accuracy:")
+        st.info("Accuracy Dataset1:")
         st.markdown("- Random Forest: **99.00%**\n- ANN: **95.27%**\n- XGBoost: **97.75%**\n- SVM: **91.84%**")
-        st.info("Confusion matrices and classification reports are available in the full report.")
+        st.info("ROC Curves:")
+        st.image("fig(2).jpg")
+        st.image("fig(3).jpg")
+
+        st.info("Accuracy Dataset2:")
+        st.markdown("- Random Forest: **96.53%**\n- ANN: **95.05%**\n- XGBoost: **99.01%**\n- SVM: **91.09%**")
+        st.info("ROC Curves:")
+        st.image("fig(1).jpg")
+        st.image("fig(4).jpg")
+
+       
+    
