@@ -232,14 +232,14 @@ elif page == "About the Study":
         st.info("Accuracy Dataset1:")
         st.markdown("- Random Forest: **99.00%**\n- ANN: **95.27%**\n- XGBoost: **97.75%**\n- SVM: **91.84%**")
         st.info("ROC Curves:")
-        st.image("fig(2).jpg")
-        st.image("fig(3).jpg")
+        st.image("fig (2).jpg")
+        st.image("fig (3).jpg")
 
         st.info("Accuracy Dataset2:")
         st.markdown("- Random Forest: **96.53%**\n- ANN: **95.05%**\n- XGBoost: **99.01%**\n- SVM: **91.09%**")
         st.info("ROC Curves:")
-        st.image("fig(1).jpg")
-        st.image("fig(4).jpg")
+        st.image("fig (1).jpg")
+        st.image("fig (4).jpg")
 
        
     
