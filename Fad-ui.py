@@ -161,7 +161,7 @@ elif page == "About the Study":
    st.title("📖 About the Study")
 
    if st.button("Show Datasets"):
-        st.info("Datasets used in this study include Twitter profile metadata and Instagram public features extracted for classification.")
+       st.info("Datasets used in this study include Twitter profile metadata and Instagram public features extracted for classification.")
        # File uploader
        uploaded_file = "users.csv"
        uploaded_file1 = "fusers.csv"
