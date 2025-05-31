@@ -162,6 +162,26 @@ elif page == "About the Study":
 
    if st.button("Show Datasets"):
         st.info("Datasets used in this study include Twitter profile metadata and Instagram public features extracted for classification.")
+       # File uploader
+       uploaded_file = "users.csv"
+       uploaded_file1 = "fusers.csv"
+       uploaded_file2 = "social_media_merged_numeric.csv"
+
+
+
+       # If a file is uploaded
+       if uploaded_file is not None:
+       # Read CSV into a DataFrame
+          df = pd.read_csv(uploaded_file)
+          df1 = pd.read_csv(uploaded_file1)
+          df2 = pd.read_csv(uploaded_file2)
+
+    
+          # Display the DataFrame
+          st.subheader("Datasets")
+          st.dataframe(df)
+          st.dataframe(df1)
+          st.dataframe(df2)
 
    if st.button("Show Figures"):
     import matplotlib.pyplot as plt
