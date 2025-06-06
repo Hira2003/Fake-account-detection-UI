@@ -39,6 +39,12 @@ lang_dict = {
     'ru': 8, 'tr': 9, 'ar': 10, 'pl': 11, 'zh': 12, 'nl': 13, 'fa': 14,
     'sv': 15, 'no': 16, 'da': 17, 'fi': 18
 }
+# Set page title and favicon
+st.set_page_config(
+    page_title="Fake Account Detector",
+    page_icon="🕵🏻‍♀️",
+    layout="wide"
+)
 
 # ---- Sidebar Navigation ----
 page = st.sidebar.radio("Select Page", ["Main","Twitter Account Detection", "Instagram Account Detection", "About the Study"])
