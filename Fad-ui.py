@@ -5,30 +5,18 @@ import numpy as np
 import gender_guesser.detector as gender
 import re
 
-# --- Optional: Twitter API and Instagram Extractor Imports ---
-try:
-    import tweepy
-except ImportError:
-    tweepy = None
-
-try:
-    import instaloader
-except ImportError:
-    instaloader = None
-
 # ---- Load Models ----
 @st.cache_resource
 def load_model(model_key):
     return joblib.load(MODEL_FILES[model_key])
 
-# Separate model files for Twitter and Instagram
+# Model files for Twitter and Instagram
 MODEL_FILES = {
     # Twitter Models
     "Random Forest": "fake_account_model_new99.pkl",
     "SVM": "svm_model.pkl",
     "XGBoost": "xgb_model.pkl",
     "ANN (MLP)": "nn_model.pkl",
-
     # Instagram Models
     "IG Random Forest": "fake_account_model_new_insta.pkl",
     "IG SVM":  "svm_model_insta.pkl",
@@ -36,7 +24,7 @@ MODEL_FILES = {
     "IG ANN (MLP)": "fake_account_nn_model_insta.pkl"
 }
 
-# ---- Gender Detector ----
+# Gender Detector
 sex_predictor = gender.Detector(case_sensitive=False)
 sex_map = {'female': -2, 'mostly_female': -1, 'unknown': 0, 'mostly_male': 1, 'male': 2}
 def predict_sex(name):
@@ -56,44 +44,16 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- Extractor Utils ---
-def extract_twitter_username(url):
-    match = re.search(r"twitter\.com/([A-Za-z0-9_]+)", url)
-    return match.group(1) if match else None
-
+# --- Simple utility for extracting Instagram username from URL ---
 def extract_instagram_username(url):
     match = re.search(r"instagram\.com/([A-Za-z0-9_.]+)", url)
     return match.group(1) if match else None
 
-# --- Twitter Extractor ---
-def get_twitter_profile_data(username, bearer_token):
-    if tweepy is None or not bearer_token:
-        return None
-    client = tweepy.Client(bearer_token=bearer_token)
-    try:
-        user = client.get_user(username=username, user_fields=["public_metrics", "name", "username", "lang"])
-        if user and user.data:
-            u = user.data
-            metrics = u.public_metrics
-            return {
-                "name": u.name,
-                "statuses_count": metrics.get("tweet_count", 0),
-                "followers_count": metrics.get("followers_count", 0),
-                "friends_count": metrics.get("following_count", 0),
-                "favourites_count": 0,     # Not available in API v2
-                "listed_count": 0,         # Not available in API v2
-                "lang": getattr(u, "lang", "en")
-            }
-    except Exception as e:
-        return None
-    return None
-
-# --- Instagram Extractor ---
+# --- Instagram Extractor for public profiles using instaloader (no login needed for public) ---
 def get_instagram_profile_data(username):
-    if instaloader is None:
-        return None
-    L = instaloader.Instaloader()
     try:
+        import instaloader
+        L = instaloader.Instaloader()
         profile = instaloader.Profile.from_username(L.context, username)
         sim_name_username = 0.0
         if profile.full_name and profile.username:
@@ -128,39 +88,21 @@ if page == "Main":
     st.image("fakenot.png")
     st.text("Made by: Bouziza Hadjer and Abbassi Khawla")
 
-# ---- Twitter Detection Page ----
+# ---- Twitter Detection Page (NO extractor, manual or CSV only) ----
 if page == "Twitter Account Detection":
     st.title("🐦 Twitter Fake Account Detector")
 
     selected_model = st.selectbox("Select Model", ["Random Forest", "SVM", "XGBoost", "ANN (MLP)"])
     model = load_model(selected_model)
 
-    st.subheader("🔗 Extract from Twitter Profile Link")
-    twitter_url = st.text_input("Paste Twitter Profile URL", "")
-    if st.button("Extract Twitter Info"):
-        username = extract_twitter_username(twitter_url)
-        bearer_token = st.secrets.get("TWITTER_BEARER_TOKEN", "")
-        profile_data = get_twitter_profile_data(username, bearer_token)
-        if profile_data:
-            st.session_state["tw_name"] = profile_data["name"]
-            st.session_state["tw_lang"] = profile_data["lang"]
-            st.session_state["tw_statuses_count"] = profile_data["statuses_count"]
-            st.session_state["tw_followers_count"] = profile_data["followers_count"]
-            st.session_state["tw_friends_count"] = profile_data["friends_count"]
-            st.session_state["tw_favourites_count"] = profile_data["favourites_count"]
-            st.session_state["tw_listed_count"] = profile_data["listed_count"]
-            st.success("Profile data loaded!")
-        else:
-            st.error("Failed to extract data. (Are API keys set up?)")
-
     st.subheader("✍️ Manual Entry")
-    name = st.text_input("Full Name", st.session_state.get("tw_name", "Alice Johnson"))
-    lang = st.selectbox("Language Code", list(lang_dict.keys()), index=lang_dict.get(st.session_state.get("tw_lang", "en"), 0))
-    statuses_count = st.number_input("Statuses Count", min_value=0, value=int(st.session_state.get("tw_statuses_count", 120)))
-    followers_count = st.number_input("Followers Count", min_value=0, value=int(st.session_state.get("tw_followers_count", 250)))
-    friends_count = st.number_input("Friends Count", min_value=0, value=int(st.session_state.get("tw_friends_count", 300)))
-    favourites_count = st.number_input("Favourites Count", min_value=0, value=int(st.session_state.get("tw_favourites_count", 90)))
-    listed_count = st.number_input("Listed Count", min_value=0, value=int(st.session_state.get("tw_listed_count", 2)))
+    name = st.text_input("Full Name", "Alice Johnson")
+    lang = st.selectbox("Language Code", list(lang_dict.keys()))
+    statuses_count = st.number_input("Statuses Count", min_value=0, value=120)
+    followers_count = st.number_input("Followers Count", min_value=0, value=250)
+    friends_count = st.number_input("Friends Count", min_value=0, value=300)
+    favourites_count = st.number_input("Favourites Count", min_value=0, value=90)
+    listed_count = st.number_input("Listed Count", min_value=0, value=2)
 
     st.subheader("📂 Load Dataset")
     uploaded_file = st.file_uploader("Upload Twitter CSV", type=["csv"])
@@ -191,27 +133,27 @@ if page == "Twitter Account Detection":
         label = "🟢 Genuine" if prediction == 1 else "🔴 Fake"
         st.success(f"This account is likely: {label}")
 
-# ---- Instagram Detection Page ----
+# ---- Instagram Detection Page (extractor for public, no login needed) ----
 elif page == "Instagram Account Detection":
     st.title("📸 Instagram Fake Account Detector")
-    st.markdown("Fill in the fields below or load from dataset")
+    st.markdown("Fill in the fields below, load from dataset, or extract from a public profile link")
 
     selected_ig_model = st.selectbox("Select Instagram Model", [
         "IG Random Forest", "IG SVM", "IG XGBoost", "IG ANN (MLP)"
     ])
     insta_model = load_model(selected_ig_model)
 
-    st.subheader("🔗 Extract from Instagram Profile Link")
+    st.subheader("🔗 Extract from Instagram Public Profile Link (no login needed)")
     insta_url = st.text_input("Paste Instagram Profile URL", "")
     if st.button("Extract Instagram Info"):
         username = extract_instagram_username(insta_url)
-        profile_data = get_instagram_profile_data(username)
+        profile_data = get_instagram_profile_data(username) if username else None
         if profile_data:
             for k, v in profile_data.items():
                 st.session_state[f"ig_{k}"] = v
-            st.success("Profile data loaded!")
+            st.success("Profile data loaded! Review fields below.")
         else:
-            st.error("Failed to extract data. (Is Instaloader installed?)")
+            st.error("Failed to extract data. (Is the profile public? Is instaloader installed?)")
 
     num_followers = st.number_input("Followers", min_value=0, value=int(st.session_state.get("ig_num_followers", 1000)))
     num_following = st.number_input("Following", min_value=0, value=int(st.session_state.get("ig_num_following", 500)))
@@ -293,7 +235,6 @@ elif page == "About the Study":
         ax1.legend()
         ax1.grid(axis='y', linestyle='--', alpha=0.7)
         st.pyplot(fig1)
-        # --- Twitter vs Instagram Accuracy per Model ---
         before = [89.60, 91.08, 93.06, 94.05]
         after = [91.09, 95.05, 96.53, 99.01]
         fig2, ax2 = plt.subplots(figsize=(10, 6))
